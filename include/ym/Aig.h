@@ -11,7 +11,21 @@
 #include "ym_config.h"
 
 
-BEGIN_NAMESPACE_YM
+/// @brief aig 用の名前空間の開始
+#define BEGIN_NAMESPACE_YM_AIG			\
+  BEGIN_NAMESPACE_YM				\
+  BEGIN_NAMESPACE(nsAig)
+
+/// @brief aig 用の名前空間の終了
+#define END_NAMESPACE_YM_AIG \
+  END_NAMESPACE(nsAig)	     \
+  END_NAMESPACE_YM
+
+
+BEGIN_NAMESPACE_YM_AIG
+
+class AigHandle;
+class AigNode;
 
 //////////////////////////////////////////////////////////////////////
 /// @class Aig Aig.h "Aig.h"
@@ -36,36 +50,138 @@ public:
   // 内容を設定する関数
   //////////////////////////////////////////////////////////////////////
 
-  /// @brief 内容を初期化する．
+  /// @brief 初期化する．
   void
-  clear();
-
-  /// @brief 入力ノードを作る．
-  void
-  new_input(
-    SizeType node_id ///< [in] ノード番号
+  initialize(
+    SizeType I, ///< [in] 入力数
+    SizeType L, ///< [in] ラッチ数
+    SizeType O  ///< [in] 出力数
   );
 
-  /// @brief ラッチノードを作る．
-  void
-  new_latch(
-    SizeType node_id,   ///< [in] ノード番号
-    SizeType next_state ///< [in] next_state リテラル
-  );
-
-  /// @brief 出力を定義する．
-  void
-  new_output(
-    SizeType src_literal ///< [in] ソースリテラル
-  );
-
-  /// @brief ANDノードを作る．
-  void
+  /// @brief ANDノードを生成する．
+  /// @return 生成したノードのハンドルを返す．
+  AigHandle
   new_and(
-    SizeType node_id,      ///< [in] ノード番号
-    SizeType src1_literal, ///< [in] ソース1のリテラル
-    SizeType src2_literal  ///< [in] ソース2のリテラル
+    AigHandle src1, ///< [in] 入力1のハンドル
+    AigHandle src2  ///< [in] 入力2のハンドル
   );
+
+  /// @brief ラッチのソースハンドルを設定する．
+  void
+  set_latch_src(
+    SizeType pos, ///< [in] ラッチ番号 ( 0 <= pos < L() )
+    AigHandle src ///< [in] ソースのハンドル
+  );
+
+  /// @brief 出力のソースハンドルを設定する．
+  void
+  set_output_src(
+    SizeType pos, ///< [in] 出力番号 ( 0 <= pos < O() )
+    AigHandle src ///< [in] ソースのハンドル
+  );
+
+  /// @brief ANDノードのソースハンドルを設定する．
+  void
+  set_and_src(
+    SizeType pos,   ///< [in] AND番号 ( 0 <= pos < A() )
+    AigHandle src1, ///< [in] ソース1のハンドル
+    AigHandle src2  ///< [in] ソース1のハンドル
+  );
+
+  /// @brief 入力名を設定する．
+  void
+  set_input_symbol(
+    SizeType pos,      ///< [in] 入力番号 ( 0 <= pos < I() )
+    const string& name ///< [in] 名前
+  );
+
+  /// @brief ラッチ名を設定する．
+  void
+  set_latch_symbol(
+    SizeType pos,      ///< [in] ラッチ番号 ( 0 <= pos < L() )
+    const string& name ///< [in] 名前
+  );
+
+  /// @brief 出力名を設定する．
+  void
+  set_output_symbol(
+    SizeType pos,      ///< [in] 出力番号 ( 0 <= pos < O() )
+    const string& name ///< [in] 名前
+  );
+
+
+public:
+  //////////////////////////////////////////////////////////////////////
+  // 内容を取得する関数
+  //////////////////////////////////////////////////////////////////////
+
+  /// @brief 入力数を得る．
+  SizeType
+  I() const;
+
+  /// @brief ラッチ数を得る．
+  SizeType
+  L() const;
+
+  /// @brief 出力数を得る．
+  SizeType
+  O() const;
+
+  /// @brief ANDノード数を返す．
+  SizeType
+  A() const;
+
+  /// @brief 入力ノードのハンドルを得る．
+  AigHandle
+  input(
+    SizeType pos ///< [in] 入力番号 ( 0 <= pos < I() )
+  ) const;
+
+  /// @brief ラッチノードのハンドルを得る．
+  AigHandle
+  latch(
+    SizeType pos ///< [in] ラッチ番号 ( 0 <= pos < L() )
+  ) const;
+
+  /// @brief ラッチのソースハンドルを得る．
+  AigHandle
+  latch_src(
+    SizeType pos ///< [in] ラッチ番号 ( 0 <= pos < L() )
+  ) const;
+
+  /// @brief 出力のソースハンドルを得る．
+  AigHandle
+  output_src(
+    SizeType pos ///< [in] 出力番号 ( 0 <= pos < O() )
+  ) const;
+
+  /// @brief ANDノードのハンドルを得る．
+  AigHandle
+  and_node(
+    SizeType pos ///< [in] ANDノード番号 ( 0 <= pos < A() )
+  ) const;
+
+  /// @brief 入力のシンボルを得る．
+  const string&
+  input_symbol(
+    SizeType pos ///< [in] 入力番号 ( 0 <= pos < I() )
+  ) const;
+
+  /// @brief ラッチのシンボルを得る．
+  const string&
+  latch_symbol(
+    SizeType pos ///< [in] ラッチ番号 ( 0 <= pos < L() )
+  ) const;
+
+  /// @brief 出力のシンボルを得る．
+  const string&
+  output_symbol(
+    SizeType pos ///< [in] 出力番号 ( 0 <= pos < O() )
+  ) const;
+
+  /// @brief コメントを得る．
+  string
+  comment() const;
 
 
 public:
@@ -85,7 +201,7 @@ public:
   /// @return 読み込みが成功したら true を返す．
   bool
   read_aag(
-    ostream& s ///< [in] 入力ストリーム
+    istream& s ///< [in] 入力ストリーム
   );
 
   /// @brief AIG フォーマットを読み込む．
@@ -99,7 +215,7 @@ public:
   /// @return 読み込みが成功したら true を返す．
   bool
   read_aig(
-    ostream& s ///< [in] 入力ストリーム
+    istream& s ///< [in] 入力ストリーム
   );
 
   /// @brief 内容を Ascii AIG フォーマットで書き出す．
@@ -141,13 +257,15 @@ private:
     istream& s ///< [in] 入力ストリーム
   );
 
-  /// @brief ノード番号の重複を調べる．
-  ///
-  /// 重複していた場合には AigError を送出する．
+  /// @brief シンボルテーブルとコメントを出力する．
   void
-  check_node(
-    SIzeType node ///< [in] ノード番号
+  write_symbols(
+    ostream& s ///< [in] 出力ストリーム
   ) const;
+
+  /// @brief ノードのID番号を振り直す．
+  void
+  reordering();
 
 
 private:
@@ -155,30 +273,32 @@ private:
   // データメンバ
   //////////////////////////////////////////////////////////////////////
 
-  struct AigNode
-  {
-    SizeType mNodeId;
-    SizeType mSrc0;
-    SizeType mSrc1;
-  };
+  // 入力ノードのリスト
+  vector<AigNode*> mInputList;
 
-  // 定義済みノード番号の辞書
-  unordered_set<SizeType> mNodeDict;
-
-  // ノード番号の最大値
-  SizeType mM{0};
-
-  // 入力ノード番号のリスト
-  vector<SizeType> mInputList;
-
-  // ラッチノード番号とラッチ入力リテラルのリスト
-  vector<pair<SizeType, SizeType>> mLatchList;
-
-  // 出力のソースリテラルのリスト
-  vector<SizeType> mOutputList;
+  // ラッチノードのリスト
+  vector<AigNode*> mLatchList;
 
   // ANDノードのリスト
-  vector<AigNode> mAndList;
+  vector<AigNode*> mAndList;
+
+  // 出力の入力ハンドルのリスト
+  vector<AigHandle> mOutputList;
+
+  // ラッチの入力ハンドルのリスト
+  vector<AigHandle> mLatchSrcList;
+
+  // 入力のシンボルテーブル
+  vector<string> mInputSymbols;
+
+  // ラッチのシンボルテーブル
+  vector<string> mLatchSymbols;
+
+  // 出力のシンボルテーブル
+  vector<string> mOutputSymbols;
+
+  // コメント
+  string mComment;
 
 };
 
@@ -225,6 +345,13 @@ private:
   string mMsg;
 
 };
+
+END_NAMESPACE_YM_AIG
+
+BEGIN_NAMESPACE_YM
+
+using nsAig::Aig;
+using nsAig::AigError;
 
 END_NAMESPACE_YM
 
