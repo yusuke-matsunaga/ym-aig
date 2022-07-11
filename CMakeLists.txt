@@ -52,6 +52,7 @@ add_subdirectory ( tests )
 
 set ( aig_SOURCES
   c++-srcs/Aig.cc
+  c++-srcs/Aag.cc
   )
 
 

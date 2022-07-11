@@ -131,33 +131,45 @@ public:
   SizeType
   A() const;
 
-  /// @brief 入力ノードのハンドルを得る．
-  AigHandle
+  /// @brief 入力ノードのリテラルを得る．
+  SizeType
   input(
     SizeType pos ///< [in] 入力番号 ( 0 <= pos < I() )
   ) const;
 
-  /// @brief ラッチノードのハンドルを得る．
-  AigHandle
+  /// @brief ラッチノードのリテラルを得る．
+  SizeType
   latch(
     SizeType pos ///< [in] ラッチ番号 ( 0 <= pos < L() )
   ) const;
 
-  /// @brief ラッチのソースハンドルを得る．
-  AigHandle
+  /// @brief ラッチのソースリテラルを得る．
+  SizeType
   latch_src(
     SizeType pos ///< [in] ラッチ番号 ( 0 <= pos < L() )
   ) const;
 
-  /// @brief 出力のソースハンドルを得る．
-  AigHandle
+  /// @brief 出力のソースリテラルを得る．
+  SizeType
   output_src(
     SizeType pos ///< [in] 出力番号 ( 0 <= pos < O() )
   ) const;
 
-  /// @brief ANDノードのハンドルを得る．
-  AigHandle
+  /// @brief ANDノードのリテラルを得る．
+  SizeType
   and_node(
+    SizeType pos ///< [in] ANDノード番号 ( 0 <= pos < A() )
+  ) const;
+
+  /// @brief ANDノードのソース1のリテラルを得る．
+  SizeType
+  and_src1(
+    SizeType pos ///< [in] ANDノード番号 ( 0 <= pos < A() )
+  ) const;
+
+  /// @brief ANDノードのソース2のリテラルを得る．
+  SizeType
+  and_src2(
     SizeType pos ///< [in] ANDノード番号 ( 0 <= pos < A() )
   ) const;
 

@@ -28,6 +28,15 @@ Aig::Aig()
 // @brief デストラクタ
 Aig::~Aig()
 {
+  for ( auto node: mInputList ) {
+    delete node;
+  }
+  for ( auto node: mLatchList ) {
+    delete node;
+  }
+  for ( auto node: mAndList ) {
+    delete node;
+  }
 }
 
 // @brief 内容を初期化する．
@@ -176,54 +185,74 @@ Aig::A() const
   return mAndList.size();
 }
 
-// @brief 入力ノードのハンドルを得る．
-AigHandle
+// @brief 入力ノードのリテラルを得る．
+SizeType
 Aig::input(
   SizeType pos ///< [in] 入力番号 ( 0 <= pos < I() )
 ) const
 {
   ASSERT_COND( 0 <= pos && pos < I() );
-  return AigHandle{mInputList[pos], false};
+  return AigHandle{mInputList[pos], false}.lit();
 }
 
-// @brief ラッチノードのハンドルを得る．
-AigHandle
+// @brief ラッチノードのリテラルを得る．
+SizeType
 Aig::latch(
   SizeType pos
 ) const
 {
   ASSERT_COND( 0 <= pos && pos < L() );
-  return AigHandle{mLatchList[pos], false};
+  return AigHandle{mLatchList[pos], false}.lit();
 }
 
-// @brief ラッチのソースハンドルを得る．
-AigHandle
+// @brief ラッチのソースリテラルを得る．
+SizeType
 Aig::latch_src(
   SizeType pos
 ) const
 {
   ASSERT_COND( 0 <= pos && pos < L() );
-  return mLatchSrcList[pos];
+  return mLatchSrcList[pos].lit();
 }
 
-// @brief 出力のソースハンドルを得る．
-AigHandle
+// @brief 出力のソースリテラルを得る．
+SizeType
 Aig::output_src(
   SizeType pos
 ) const
 {
   ASSERT_COND( 0 <= pos && pos < O() );
-  return mOutputList[pos];
+  return mOutputList[pos].lit();
 }
 
 // @brief ANDノードのハンドルを得る．
-AigHandle
+SizeType
 Aig::and_node(
   SizeType pos
 ) const
 {
   ASSERT_COND( 0 <= pos && pos < A() );
-  return AigHandle{mAndList[pos], false};
+  return AigHandle{mAndList[pos], false}.lit();
+}
+
+// @brief ANDノードのソース1のリテラルを得る．
+SizeType
+Aig::and_src1(
+  SizeType pos
+) const
+{
+  ASSERT_COND( 0 <= pos && pos < A() );
+  return mAndList[pos]->src1().lit();
+}
+
+// @brief ANDノードのソース2のリテラルを得る．
+SizeType
+Aig::and_src2(
+  SizeType pos
+) const
+{
+  ASSERT_COND( 0 <= pos && pos < A() );
+  return mAndList[pos]->src2().lit();
 }
 
 // @brief 入力のシンボルを得る．
@@ -301,14 +330,14 @@ Aig::read_aag(
   vector<AigHandle> node_map(M * 2 + 2);
   // 入力ノードの対応付を行う．
   for ( SizeType i = 0; i < I; ++ i ) {
-    auto h = input(i);
+    AigHandle h{mInputList[i], false};
     SizeType pos = aag.input(i);
     node_map[pos * 2 + 0] = h;
     node_map[pos * 2 + 1] = ~h;
   }
   // ラッチノードの対応付を行う．
   for ( SizeType i = 0; i < L; ++ i ) {
-    auto h = latch(i);
+    AigHandle h{mLatchList[i], false};
     SizeType pos = aag.latch(i);
     node_map[pos * 2 + 0] = h;
     node_map[pos * 2 + 1] = ~h;
@@ -463,12 +492,12 @@ Aig::read_aig(
   node_list[0] = AigHandle::make_zero();
   node_list[1] = AigHandle::make_one();
   for ( SizeType i = 0; i < I; ++ i ) {
-    auto h = input(i);
+    AigHandle h{mInputList[i], false};
     node_list[i * 2 + 2] = h;
     node_list[i * 2 + 3] = ~h;
   }
   for ( SizeType i = 0; i < L; ++ i ) {
-    auto h = latch(i);
+    AigHandle h{mLatchList[i], false};
     node_list[(i + I + 1) * 2 + 0] = h;
     node_list[(i + I + 1) * 2 + 1] = ~h;
   }
@@ -547,24 +576,24 @@ Aig::write_aag(
   // ラッチ行の出力
   for ( SizeType i = 0; i < L(); ++ i ) {
     SizeType node_id = i + I() + 1;
-    auto src = mLatchSrcList[i];
-    s << (node_id * 2) << " " << src.lit() << endl;
+    auto src = latch_src(i);
+    s << (node_id * 2) << " " << src << endl;
   }
 
   // 出力行の出力
   for ( SizeType i = 0; i < O(); ++ i ) {
-    auto src = mOutputList[i];
-    s << src.lit() << endl;
+    auto src = output_src(i);
+    s << src << endl;
   }
 
   // AND行の出力
   for ( SizeType i = 0; i < A(); ++ i ) {
-    auto node = mAndList[i];
-    auto src0 = node->src1();
-    auto src1 = node->src2();
-    s << node->lit() << " "
-      << src0.lit() << " "
-      << src1.lit() << endl;
+    auto lit = and_node(i);
+    auto src1 = and_src1(i);
+    auto src2 = and_src2(i);
+    s << lit << " "
+      << src1 << " "
+      << src2 << endl;
   }
 
   // シンボルテーブルとコメントの出力
