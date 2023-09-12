@@ -27,10 +27,7 @@
 # インクルードパスの設定
 # ===================================================================
 include_directories(
-  ${PROJECT_BINARY_DIR}/include
-  ${PROJECT_SOURCE_DIR}/ym-common/include
-  ${PROJECT_SOURCE_DIR}/ym-base/include
-  ${CMAKE_CURRENT_SOURCE_DIR}/include
+  include
   )
 
 
@@ -51,8 +48,8 @@ add_subdirectory ( tests )
 # ===================================================================
 
 set ( aig_SOURCES
-  c++-srcs/Aig.cc
-  c++-srcs/Aag.cc
+  c++-srcs/AigModel.cc
+  c++-srcs/ModelImpl.cc
   )
 
 

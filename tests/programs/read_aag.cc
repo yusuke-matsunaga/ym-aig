@@ -1,26 +1,26 @@
 
-/// @file read_aig.cc
-/// @brief read_aig の実装ファイル
+/// @file read_aag.cc
+/// @brief read_aag の実装ファイル
 /// @author Yusuke Matsunaga (松永 裕介)
 ///
-/// Copyright (C) 2022 Yusuke Matsunaga
+/// Copyright (C) 2023 Yusuke Matsunaga
 /// All rights reserved.
 
-#include "ym/Aig.h"
+#include "ym/AigModel.h"
 
 
 BEGIN_NAMESPACE_YM
 
 int
-read_aig(
+read_aag(
   int argc,
   char** argv
 )
 {
   for ( SizeType i = 1; i < argc; ++ i ) {
     string filename = argv[i];
-    Aig aig;
-    aig.read_aig(filename);
+    AigMode aig;
+    aig.read_aag(filename);
     aig.write_aig(cout);
   }
   return 0;
@@ -35,5 +35,5 @@ main(
   char** argv
 )
 {
-  return YM_NAMESPACE::read_aig(argc, argv);
+  return YM_NAMESPACE::read_aag(argc, argv);
 }
