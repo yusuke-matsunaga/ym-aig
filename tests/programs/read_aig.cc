@@ -21,7 +21,7 @@ read_aig(
     string filename = argv[i];
     AigModel aig;
     aig.read_aig(filename);
-    aig.write_aig(cout);
+    aig.print(cout);
   }
   return 0;
 }

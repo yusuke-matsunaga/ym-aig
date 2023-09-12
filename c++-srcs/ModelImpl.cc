@@ -352,4 +352,44 @@ ModelImpl::read_symbols(
   }
 }
 
+// @brief 内容を出力する．
+void
+ModelImpl::print(
+  ostream& s
+) const
+{
+  s << "M: " << M() << endl
+    << "I: " << I() << endl
+    << "L: " << L() << endl
+    << "O: " << O() << endl
+    << "A: " << A() << endl;
+
+  s << "=== Inputs ===" << endl;
+  for ( SizeType i = 0; i < I(); ++ i ) {
+    s << input_symbol(i) << ": #" << input(i) << endl;
+  }
+
+  s << "=== Latches ===" << endl;
+  for ( SizeType i = 0; i < L(); ++ i ) {
+    s << latch_symbol(i) << ": #" << latch(i)
+      << ": src = " << latch_src(i) << endl;
+  }
+
+  s << "=== Outputs ===" << endl;
+  for ( SizeType i = 0; i < O(); ++ i ) {
+    s << output_symbol(i)
+      << ": src = " << output_src(i) << endl;
+  }
+
+  s << "=== AND gates ===" << endl;
+  for ( SizeType i = 0; i < A(); ++ i ) {
+    s << and_node(i)
+      << ": src1 = " << and_src1(i)
+      << ", src2 = " << and_src2(i) << endl;
+  }
+
+  s << "=== comments ===" << endl
+    << comment() << endl;
+}
+
 END_NAMESPACE_YM_AIG

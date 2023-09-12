@@ -19,9 +19,9 @@ read_aag(
 {
   for ( SizeType i = 1; i < argc; ++ i ) {
     string filename = argv[i];
-    AigMode aig;
+    AigModel aig;
     aig.read_aag(filename);
-    aig.write_aig(cout);
+    aig.print(cout);
   }
   return 0;
 }

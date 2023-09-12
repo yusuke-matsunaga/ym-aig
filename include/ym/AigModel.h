@@ -159,6 +159,12 @@ public:
   string
   comment() const;
 
+  /// @brief 内容を出力する．
+  void
+  print(
+    ostream& s ///< [in] 出力先のストリーム
+  ) const;
+
 
 private:
   //////////////////////////////////////////////////////////////////////

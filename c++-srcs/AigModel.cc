@@ -204,4 +204,13 @@ AigModel::comment() const
   return mImpl->comment();
 }
 
+// @brief 内容を出力する．
+void
+AigModel::print(
+  ostream& s
+) const
+{
+  mImpl->print(s);
+}
+
 END_NAMESPACE_YM_AIG
