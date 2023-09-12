@@ -19,8 +19,7 @@ read_aig(
 {
   for ( SizeType i = 1; i < argc; ++ i ) {
     string filename = argv[i];
-    AigModel aig;
-    aig.read_aig(filename);
+    auto aig = AigModel::read_aig(filename);
     aig.print(cout);
   }
   return 0;

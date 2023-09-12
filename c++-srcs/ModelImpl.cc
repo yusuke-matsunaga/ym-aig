@@ -42,7 +42,7 @@ ModelImpl::initialize(
 }
 
 // @brief Ascii AIG フォーマットを読み込む．
-bool
+void
 ModelImpl::read_aag(
   istream& s
 )
@@ -199,8 +199,6 @@ ModelImpl::read_aag(
 
   // シンボルテーブルとコメントの読み込みを行う．
   read_symbols(s);
-
-  return true;
 }
 
 BEGIN_NONAMESPACE
@@ -225,7 +223,7 @@ get_number(
 END_NONAMESPACE
 
 // @brief AIG フォーマットを読み込む．
-bool
+void
 ModelImpl::read_aig(
   istream& s
 )
@@ -309,8 +307,6 @@ ModelImpl::read_aig(
 
   // シンボルの読み込み
   read_symbols(s);
-
-  return true;
 }
 
 // @brief シンボルテーブルとコメントを読み込む．

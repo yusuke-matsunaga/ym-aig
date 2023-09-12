@@ -24,6 +24,11 @@ public:
   /// @brief コンストラクタ
   ModelImpl() = default;
 
+  /// @brief コピーコンストラクタ
+  ModelImpl(
+    const ModelImpl& src ///< [in] コピー元のオブジェクト
+  ) = default;
+
   /// @brief デストラクタ
   ~ModelImpl() = default;
 
@@ -35,15 +40,17 @@ public:
   //////////////////////////////////////////////////////////////////////
 
   /// @brief Ascii AIG フォーマットを読み込む．
-  /// @return 読み込みが成功したら true を返す．
-  bool
+  ///
+  /// 読み込みが失敗したら std::invalid_argument 例外を送出する．
+  void
   read_aag(
     istream& s ///< [in] 入力ストリーム
   );
 
   /// @brief AIG フォーマットを読み込む．
-  /// @return 読み込みが成功したら true を返す．
-  bool
+  ///
+  /// 読み込みが失敗したら std::invalid_argument 例外を送出する．
+  void
   read_aig(
     istream& s ///< [in] 入力ストリーム
   );

@@ -23,10 +23,35 @@ class ModelImpl;
 //////////////////////////////////////////////////////////////////////
 class AigModel
 {
-public:
+private:
 
   /// @brief コンストラクタ
   AigModel();
+
+
+public:
+
+  /// @brief コピーコンストラクタ
+  AigModel(
+    const AigModel& src ///< [in] コピー元のオブジェクト
+  );
+
+  /// @brief ムーブコンストラクタ
+  AigModel(
+    AigModel&& src ///< [in] ムーブ元のオブジェクト
+  );
+
+  /// @brief コピー代入文
+  AigModel&
+  operator=(
+    const AigModel& src ///< [in] コピー元のオブジェクト
+  );
+
+  /// @brief ムーブ代入文
+  AigModel&
+  operator=(
+    AigModel&& src ///< [in] ムーブ元のオブジェクト
+  );
 
   /// @brief デストラクタ
   ~AigModel();
@@ -34,34 +59,42 @@ public:
 
 public:
   //////////////////////////////////////////////////////////////////////
-  /// @name ファイル入出力
+  /// @name ファイル入力
   /// @{
   //////////////////////////////////////////////////////////////////////
 
   /// @brief Ascii AIG フォーマットを読み込む．
-  /// @return 読み込みが成功したら true を返す．
-  bool
+  ///
+  /// 読み込みが失敗したら std::invalid_argument 例外を送出する．
+  static
+  AigModel
   read_aag(
     const string& filename ///< [in] ファイル名
   );
 
   /// @brief Ascii AIG フォーマットを読み込む．
-  /// @return 読み込みが成功したら true を返す．
-  bool
+  ///
+  /// 読み込みが失敗したら std::invalid_argument 例外を送出する．
+  static
+  AigModel
   read_aag(
     istream& s ///< [in] 入力ストリーム
   );
 
   /// @brief AIG フォーマットを読み込む．
-  /// @return 読み込みが成功したら true を返す．
-  bool
+  ///
+  /// 読み込みが失敗したら std::invalid_argument 例外を送出する．
+  static
+  AigModel
   read_aig(
     const string& filename ///< [in] ファイル名
   );
 
   /// @brief AIG フォーマットを読み込む．
-  /// @return 読み込みが成功したら true を返す．
-  bool
+  ///
+  /// 読み込みが失敗したら std::invalid_argument 例外を送出する．
+  static
+  AigModel
   read_aig(
     istream& s ///< [in] 入力ストリーム
   );

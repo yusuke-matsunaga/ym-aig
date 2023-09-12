@@ -22,6 +22,45 @@ AigModel::AigModel(
 {
 }
 
+// @brief コピーコンストラクタ
+AigModel::AigModel(
+  const AigModel& src
+) : mImpl{new ModelImpl{*src.mImpl}}
+{
+}
+
+// @brief ムーブコンストラクタ
+AigModel::AigModel(
+  AigModel&& src
+) : mImpl{src.mImpl}
+{
+  src.mImpl = nullptr;
+}
+
+// @brief コピー代入文
+AigModel&
+AigModel::operator=(
+  const AigModel& src
+)
+{
+  if ( this != &src ) {
+    delete mImpl;
+    mImpl = new ModelImpl{*src.mImpl};
+  }
+  return *this;
+}
+
+// @brief ムーブ代入文
+AigModel&
+AigModel::operator=(
+  AigModel&& src
+)
+{
+  mImpl = src.mImpl;
+  src.mImpl = nullptr;
+  return *this;
+}
+
 // @brief デストラクタ
 AigModel::~AigModel()
 {
@@ -29,47 +68,57 @@ AigModel::~AigModel()
 }
 
 // @brief Ascii AIG フォーマットを読み込む．
-bool
+AigModel
 AigModel::read_aag(
   const string& filename
 )
 {
   ifstream s{filename};
-  if ( s ) {
-    return read_aag(s);
+  if ( !s ) {
+    ostringstream buf;
+    buf << "AigModel::read_aag: Could not open file "
+	<< filename;
+    throw std::invalid_argument{buf.str()};
   }
-  return false;
+  return read_aag(s);
 }
 
 // @brief Ascii AIG フォーマットを読み込む．
-bool
+AigModel
 AigModel::read_aag(
   istream& s
 )
 {
-  return mImpl->read_aag(s);
+  AigModel aig;
+  aig.mImpl->read_aag(s);
+  return aig;
 }
 
 // @brief AIG フォーマットを読み込む．
-bool
+AigModel
 AigModel::read_aig(
   const string& filename
 )
 {
   ifstream s{filename};
-  if ( s ) {
-    return read_aig(s);
+  if ( !s ) {
+    ostringstream buf;
+    buf << "AigModel::read_aag: Could not open file "
+	<< filename;
+    throw std::invalid_argument{buf.str()};
   }
-  return false;
+  return read_aig(s);
 }
 
 // @brief AIG フォーマットを読み込む．
-bool
+AigModel
 AigModel::read_aig(
   istream& s
 )
 {
-  return mImpl->read_aig(s);
+  AigModel aig;
+  aig.mImpl->read_aig(s);
+  return aig;
 }
 
 // @brief 変数番号の最大値を返す．
